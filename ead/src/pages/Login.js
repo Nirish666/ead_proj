@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { loginUser } from '../utils/jsonStorage';
+import { useAuth } from '../context/AuthContext';
 import './AuthForm.css'; // Reusing the same CSS
 
 function Login() {
@@ -8,7 +10,9 @@ function Login() {
     password: '',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,22 +25,23 @@ function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(''); // Clear previous errors
+    setSuccess('');
 
     if (!formData.email || !formData.password) {
       setError('All fields are required.');
       return;
     }
 
-    // --- API Call Simulation ---
-    // In a real app, you would send this to your backend API
-    // The backend would validate the user and return a token (e.g., JWT)
-    console.log('Logging in user:', formData);
-    
-    // On successful login:
-    // 1. Save the auth token (to localStorage or Context)
-    // 2. Redirect to the homepage
-    alert('Login successful!'); // Using alert for now
-    navigate('/'); // Redirect to Home
+    // --- Login using JSON storage ---
+    const result = loginUser(formData.email, formData.password);
+
+    if (result.success) {
+      login(result.user);
+      setSuccess('Login successful! Redirecting to Real Estate...');
+      setTimeout(() => navigate('/real-estate'), 1500);
+    } else {
+      setError(result.message);
+    }
   };
 
   return (
@@ -45,6 +50,7 @@ function Login() {
         <h2>Login</h2>
         
         {error && <p className="auth-error">{error}</p>}
+        {success && <p className="auth-success">{success}</p>}
 
         <div className="form-group">
           <label htmlFor="email">Email</label>

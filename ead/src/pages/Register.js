@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { registerUser } from '../utils/jsonStorage';
 import './AuthForm.css'; // We'll create this shared CSS file
 
 function Register() {
@@ -10,6 +11,7 @@ function Register() {
     confirmPassword: '',
   });
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,6 +25,7 @@ function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError(''); // Clear previous errors
+    setSuccess('');
 
     // --- Basic Validation ---
     if (
@@ -38,16 +41,24 @@ function Register() {
       setError('Passwords do not match.');
       return;
     }
-    
-    // --- API Call Simulation ---
-    // In a real app, you would send this to your backend API
-    console.log('Registering user:', formData);
-    
-    // On successful registration:
-    // 1. Show a success message (optional)
-    // 2. Redirect to the login page
-    alert('Registration successful! Please log in.'); // Using alert for now, but a modal is better
-    navigate('/login');
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+
+    // --- Register user using JSON storage ---
+    const result = registerUser({
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (result.success) {
+      setSuccess('Registration successful! Redirecting to login...');
+      setTimeout(() => navigate('/login'), 1500);
+    } else {
+      setError(result.message);
+    }
   };
 
   return (
@@ -56,6 +67,7 @@ function Register() {
         <h2>Register Account</h2>
         
         {error && <p className="auth-error">{error}</p>}
+        {success && <p className="auth-success">{success}</p>}
 
         <div className="form-group">
           <label htmlFor="fullName">Full Name</label>

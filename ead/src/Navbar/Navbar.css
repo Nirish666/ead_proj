@@ -1,12 +1,12 @@
 .navbar {
-  background-color: #ffffff; /* Changed to white */
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
   height: 60px;
   display: flex;
   justify-content: space-between; /* Pushes left and right content apart */
   align-items: center;
   padding: 0 40px; /* Increased padding */
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Softer shadow */
-  border-bottom: 1px solid #e6e6e6;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .navbar-left {
@@ -15,17 +15,18 @@
 }
 
 .nav-logo {
-  color: #333; /* Dark text */
+  color: white;
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: 700; /* Bolder */
+  transition: opacity 0.3s;
 }
 
 .nav-logo:hover {
-  color: #007bff; /* React blue on hover */
+  opacity: 0.8;
 }
 
-/* --- ADDED THESE STYLES --- */
+/* --- UPDATED STYLES --- */
 .navbar-right {
   display: flex;
   align-items: center;
@@ -33,29 +34,91 @@
 }
 
 .nav-link {
-  color: #555;
+  color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
   padding: 8px 12px;
   border-radius: 6px;
-  transition: background-color 0.2s, color 0.2s;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
 }
 
 .nav-link:hover {
-  background-color: #f4f4f4; /* Light grey on hover */
-  color: #333;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
-/* Special style for the 'Register' button */
+/* User display */
+.user-display {
+  color: white;
+  font-weight: 500;
+  padding: 0 12px;
+}
+
+/* Special style for the 'Register' and 'Logout' buttons */
 .nav-link-button {
-  background-color: #007bff;
+  background-color: rgba(255, 255, 255, 0.2);
   color: white;
   padding: 8px 16px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .nav-link-button:hover {
-  background-color: #0056b3;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-color: white;
 }
-/* --- END OF ADDED STYLES --- */
+/* --- END OF UPDATED STYLES --- */
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 20px;
+  }
+
+  .nav-logo {
+    font-size: 1.2rem;
+  }
+
+  .navbar-right {
+    gap: 10px;
+  }
+
+  .nav-link {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+  }
+
+  .user-display {
+    display: none;
+  }
+
+  .nav-link-button {
+    padding: 6px 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 0 15px;
+  }
+
+  .nav-logo {
+    font-size: 1rem;
+  }
+
+  .navbar-right {
+    gap: 5px;
+  }
+
+  .nav-link {
+    padding: 4px 8px;
+    font-size: 0.8rem;
+  }
+
+  .nav-link-button {
+    padding: 4px 10px;
+  }
+}
