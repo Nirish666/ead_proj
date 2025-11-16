@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
   getUserProperties,
+  getAllProperties,
+  getAllUsers,
   createProperty,
   updateProperty,
   deleteProperty,
@@ -14,6 +16,8 @@ function RealEstate() {
   const navigate = useNavigate();
   
   const [properties, setProperties] = useState([]);
+  const [allProperties, setAllProperties] = useState([]);
+  const [users, setUsers] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [error, setError] = useState('');
@@ -45,11 +49,26 @@ function RealEstate() {
       try {
         const userProps = getUserProperties(user.id);
         setProperties(userProps);
+        
+        // Load all properties and users
+        const allProps = getAllProperties();
+        const allUsers = getAllUsers();
+        setAllProperties(allProps);
+        setUsers(allUsers);
       } catch (err) {
         setError('Failed to load properties');
       }
     }
   }, [user]);
+
+  const getUserName = (userId) => {
+    const foundUser = users.find(u => u.id === userId);
+    return foundUser ? foundUser.fullName : 'Unknown User';
+  };
+
+  const getOtherProperties = () => {
+    return allProperties.filter(prop => prop.userId !== user.id);
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -122,7 +141,9 @@ function RealEstate() {
           resetForm();
           // Reload properties
           const userProps = getUserProperties(user.id);
+          const allProps = getAllProperties();
           setProperties(userProps);
+          setAllProperties(allProps);
         } else {
           setError(result.message);
         }
@@ -148,7 +169,9 @@ function RealEstate() {
           resetForm();
           // Reload properties
           const userProps = getUserProperties(user.id);
+          const allProps = getAllProperties();
           setProperties(userProps);
+          setAllProperties(allProps);
         } else {
           setError(result.message);
         }
@@ -185,7 +208,9 @@ function RealEstate() {
           setSuccess('Property deleted successfully!');
           // Reload properties
           const userProps = getUserProperties(user.id);
+          const allProps = getAllProperties();
           setProperties(userProps);
+          setAllProperties(allProps);
         } else {
           setError(result.message);
         }
@@ -467,6 +492,61 @@ function RealEstate() {
 
                   <p className="property-meta">
                     Created: {new Date(property.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Other Users' Properties Section */}
+      <div className="properties-section other-properties-section">
+        <h2>Properties from Other Users ({getOtherProperties().length})</h2>
+        {getOtherProperties().length === 0 ? (
+          <div className="no-properties">
+            <p>No properties from other users available yet.</p>
+          </div>
+        ) : (
+          <div className="properties-grid">
+            {getOtherProperties().map(property => (
+              <div key={property.id} className="property-card other-property-card">
+                <img
+                  src={property.imageUrl}
+                  alt={property.title}
+                  className="property-image"
+                  onError={(e) => {
+                    e.target.src = 'https://via.placeholder.com/300x200';
+                  }}
+                />
+                <div className="property-content">
+                  <h3>{property.title}</h3>
+                  <p className="property-owner">👤 Listed by: {getUserName(property.userId)}</p>
+                  <p className="property-type">{property.propertyType}</p>
+                  <p className="property-location">📍 {property.location}</p>
+                  
+                  <div className="property-specs">
+                    <span className="spec">
+                      🛏️ {property.bedrooms} Beds
+                    </span>
+                    <span className="spec">
+                      🚿 {property.bathrooms} Baths
+                    </span>
+                    <span className="spec">
+                      📐 {property.area} sq ft
+                    </span>
+                  </div>
+
+                  <p className="property-description">{property.description}</p>
+
+                  <div className="property-footer">
+                    <span className="property-price">
+                      ${property.price.toLocaleString()}
+                    </span>
+                  </div>
+
+                  <p className="property-meta">
+                    Listed: {new Date(property.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </div>

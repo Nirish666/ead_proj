@@ -469,3 +469,55 @@
     gap: 10px;
   }
 }
+
+/* Other Properties Section */
+.other-properties-section {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 3px solid #667eea;
+}
+
+.other-properties-section h2 {
+  color: #764ba2;
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+.other-property-card {
+  border: 2px solid #667eea;
+  position: relative;
+}
+
+.other-property-card::before {
+  content: '★ Listed by Others';
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #667eea;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.75em;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.property-owner {
+  font-size: 0.95em;
+  color: #764ba2;
+  font-weight: 600;
+  margin: 8px 0;
+  padding: 8px;
+  background-color: #f0e6ff;
+  border-radius: 5px;
+}
+
+@media (max-width: 480px) {
+  .other-properties-section {
+    margin-top: 30px;
+  }
+
+  .other-properties-section h2 {
+    font-size: 1.3em;
+  }
+}
